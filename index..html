@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการและคู่มือการปลูกลำไยเชิงพาณิชย์ (Longan Cultivation Dashboard)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            dark: '#0f3822',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        earth: {
+                            100: '#f7f4ef',
+                            200: '#ede6d8',
+                            800: '#5c4832',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #166534;
+            color: #166534;
+            font-weight: 600;
+            background-color: rgba(22, 101, 52, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #166534;
+            border-radius: 3px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-brand-dark text-white shadow-lg">
+        <div class="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500 rounded-xl text-brand-dark shadow-md">
+                        <i class="fa-solid font-bold fa-tree text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white">คู่มือการปลูกลำไยเชิงพาณิชย์</h1>
+                        <p class="text-xs text-emerald-300 font-light hidden sm:block">Longan Cultivation Management & Analytics Dashboard</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                    <a href="#overview" class="px-3 py-2 rounded-md hover:bg-emerald-800 transition">ภาพรวม & Stat</a>
+                    <a href="#methods" class="px-3 py-2 rounded-md hover:bg-emerald-800 transition">3 วิธีการปลูก</a>
+                    <a href="#comparison" class="px-3 py-2 rounded-md hover:bg-emerald-800 transition">ตารางเปรียบเทียบ</a>
+                    <a href="#calculator" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-brand-dark font-semibold rounded-lg shadow transition">
+                        <i class="fa-solid fa-calculator mr-1"></i> คำนวณ ROI
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        <!-- Hero Banner with Background Image -->
+        <section class="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 text-white p-8 md:p-12">
+            <div class="absolute inset-0 opacity-25 mix-blend-overlay">
+                <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=1600&q=80" alt="Longan Orchard" class="w-full h-full object-cover">
+            </div>
+            <div class="relative z-10 max-w-3xl">
+                <span class="inline-block px-3 py-1 bg-amber-500 text-brand-dark text-xs font-bold rounded-full mb-3 uppercase tracking-wider">
+                    Smart Agriculture Guide
+                </span>
+                <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+                    เทคนิคการปลูกลำไย 3 ระบบ <br class="hidden sm:inline"><span class="text-amber-400">เพื่อผลตอบแทนสูงสุด</span>
+                </h2>
+                <p class="text-slate-200 text-sm md:text-base mb-6 font-light leading-relaxed">
+                    ยกระดับสวนลำไยด้วยการวางแผนอย่างเป็นระบบ ครอบคลุมตั้งแต่การปลูกแบบทรงพุ่มธรรมชาติ ระยะชิดทรงเตี้ย จนถึงการผลิตนอกฤดูด้วยเทคโนโลยีโพแทสเซียมคลอเรต
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#calculator" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold rounded-xl shadow-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> เริ่มคำนวณผลผลิต
+                    </a>
+                    <a href="#methods" class="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-medium rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> อ่านรายละเอียดวิธีปลูก
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Overview & Metrics -->
+        <section id="overview" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-brand-700"></i> สรุปภาพรวมและตัวชี้วัด (Overview Metrics)
+                    </h3>
+                    <p class="text-slate-500 text-sm mt-1">เปรียบเทียบตัวเลขสำคัญของแต่ละรูปแบบการปลูกลำไย</p>
+                </div>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">ความหนาแน่นการปลูก</span>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-border-all"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800 mb-1">16 - 100 <span class="text-xs font-normal text-slate-500">ต้น/ไร่</span></div>
+                    <p class="text-xs text-slate-500">ขึ้นอยู่กับระบบ (ธรรมชาติ vs ระยะชิด)</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">ระยะเวลาคืนทุน</span>
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800 mb-1">4 - 6 <span class="text-xs font-normal text-slate-500">ปี</span></div>
+                    <p class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-bolt mr-1"></i>แบบระยะชิดคืนทุนเร็วกว่า 30%</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">ผลผลิตเฉลี่ย/ต้น</span>
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-weight-hanging"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800 mb-1">60 - 150 <span class="text-xs font-normal text-slate-500">กก./ต้น</span></div>
+                    <p class="text-xs text-slate-500">ขึ้นอยู่กับอายุต้นและเทคนิคการจัดการ</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">ผลตอบแทนราคาขาย</span>
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-purple-700 mb-1">+40% - 80%</div>
+                    <p class="text-xs text-purple-600 font-medium">เพิ่มขึ้นเมื่อทำลำไยนอกฤดู</p>
+                </div>
+            </div>
+
+            <!-- Visual Charts Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Yield Comparison -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                    <h4 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-brand-700"></i> เปรียบเทียบผลผลิตต่อไร่ในแต่ละปี (กิโลกรัม/ไร่)
+                    </h4>
+                    <div class="h-64 relative">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Cost Structure -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                    <h4 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-brand-700"></i> โครงสร้างต้นทุนและการดูแลของทั้ง 3 วิธี
+                    </h4>
+                    <div class="h-64 relative">
+                        <canvas id="costChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Detailed Interactive Tabs / Cards -->
+        <section id="methods" class="space-y-6">
+            <div>
+                <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open-reader text-brand-700"></i> รายละเอียดเจาะลึก 3 วิธีการปลูก
+                </h3>
+                <p class="text-slate-500 text-sm mt-1">คลิกเลือกเพื่อสลับดูแนวทางการปฏิบัติและเทคนิคการดูแลอย่างละเอียด</p>
+            </div>
+
+            <!-- Tab Buttons Header -->
+            <div class="flex border-b border-slate-200 overflow-x-auto custom-scrollbar bg-white rounded-t-2xl px-2 pt-2 shadow-sm">
+                <button onclick="switchTab('method1')" id="tab-method1" class="tab-btn active px-6 py-3 text-slate-600 text-sm font-medium whitespace-nowrap transition flex items-center gap-2 rounded-t-lg">
+                    <i class="fa-solid fa-seedling"></i> 1. ทรงพุ่มธรรมชาติ (ดั้งเดิม)
+                </button>
+                <button onclick="switchTab('method2')" id="tab-method2" class="tab-btn px-6 py-3 text-slate-600 text-sm font-medium whitespace-nowrap transition flex items-center gap-2 rounded-t-lg">
+                    <i class="fa-solid fa-crop-simple"></i> 2. ระยะชิดทรงเตี้ย (ยุคใหม่)
+                </button>
+                <button onclick="switchTab('method3')" id="tab-method3" class="tab-btn px-6 py-3 text-slate-600 text-sm font-medium whitespace-nowrap transition flex items-center gap-2 rounded-t-lg">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 3. การปลูกนอกฤดู (KClO3)
+                </button>
+            </div>
+
+            <!-- Tab Contents Container -->
+            <div class="bg-white rounded-b-2xl p-6 md:p-8 shadow-sm border border-t-0 border-slate-200/80">
+                
+                <!-- Method 1 Content -->
+                <div id="content-method1" class="tab-content space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div>
+                                <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-full">วิธีดั้งเดิม - เน้นดูแลง่าย</span>
+                                <h4 class="text-2xl font-bold text-slate-800 mt-2">การปลูกแบบทรงพุ่มธรรมชาติ (Traditional Natural Canopy)</h4>
+                                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                                    เหมาะสำหรับเกษตรกรที่มีพื้นที่กว้างขวาง เน้นการปล่อยให้ลำต้นเติบโตตามธรรมชาติ ใช้เงินลงทุนเริ่มต้นต่ำ ประหยัดแรงงานในการตัดแต่งกิ่งช่วงปีแรกๆ
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">ระยะการปลูก</div>
+                                    <div class="text-lg font-bold text-slate-800">8 x 8 ถึง 10 x 10 เมตร</div>
+                                    <div class="text-xs text-slate-500 mt-1">ประมาณ 16 - 25 ต้น ต่อไร่</div>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">การเตรียมหลุมปลูก</div>
+                                    <div class="text-lg font-bold text-slate-800">50 x 50 x 50 ซม.</div>
+                                    <div class="text-xs text-slate-500 mt-1">ตากดิน 15-30 วัน ผสมปุ๋ยคอก 5-10 กก.</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <h5 class="font-bold text-slate-800 text-base">ขั้นตอนและการจัดการสำคัญ</h5>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>การเตรียมดิน:</strong> ขุดหลุมขนาด $50 \times 50 \times 50$ ซม. ผสมดินชั้นบนด้วยปุ๋ยคอกเก่า 5–10 กก. และปุ๋ยร็อกฟอสเฟต 200 กรัม/หลุม</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>การดูแลทรงพุ่ม:</strong> ช่วง 1-5 ปีแรก ปล่อยเติบโตธรรมชาติ ตัดเฉพาะกิ่งกระโดง กิ่งแห้ง หรือกิ่งที่เป็นโรคออกเท่านั้น</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>เมื่อทรงพุ่มชนกัน (10 ปีขึ้นไป):</strong> ต้องเริ่มตัดแต่งกิ่งชิดดินและตัดโปร่งกลางทรงพุ่ม เพื่อให้แสงแดดส่องถึงโคนต้น ลดสะสมโรค</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Info / Images -->
+                        <div class="space-y-6">
+                            <div class="rounded-2xl overflow-hidden shadow-md h-52 relative">
+                                <img src="https://images.unsplash.com/photo-1592417817098-8f3d6ef23ed9?auto=format&fit=crop&w=800&q=80" alt="Natural Canopy Tree" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                                    <span class="text-white text-xs font-light">ต้นลำไยทรงพุ่มใหญ่ธรรมชาติ</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-emerald-50 rounded-2xl p-5 border border-emerald-100 space-y-3">
+                                <h5 class="font-bold text-emerald-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-thumbs-up"></i> ข้อดี & ข้อจำกัด
+                                </h5>
+                                <div class="space-y-2 text-xs">
+                                    <div class="text-emerald-800">
+                                        <strong>ข้อดี:</strong> ลำต้นแข็งแรง ทนลมพายุ อายุยืนยาวหลายสิบปี ไม่ต้องตัดแต่งบ่อยในระยะแรก
+                                    </div>
+                                    <div class="text-rose-700">
+                                        <strong>ข้อจำกัด:</strong> ได้จำนวนต้นน้อย ฉีดพ่นยาลำบาก เก็บเกี่ยวยาก ต้องใช้นั่งร้าน/พะโอน
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 2 Content -->
+                <div id="content-method2" class="tab-content hidden space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div>
+                                <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">เน้นผลผลิตสูง - จัดการง่าย</span>
+                                <h4 class="text-2xl font-bold text-slate-800 mt-2">การปลูกแบบระยะชิดและการควบคุมทรงพุ่ม (High-Density Low Canopy)</h4>
+                                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                                    นวัตกรรมการทำสวนลำไยยุคใหม่ คุมความสูงทรงพุ่มไม่เกิน 2.5–3.0 เมตร ช่วยให้ฉีดพ่นสารเคมีและเก็บเกี่ยวได้จากพื้นดิน เก็บผลผลิตได้ไวและปริมาณต่อไร่สูงขึ้น
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">ระยะการปลูก</div>
+                                    <div class="text-lg font-bold text-slate-800">4 x 4 หรือ 3 x 6 เมตร</div>
+                                    <div class="text-xs text-slate-500 mt-1">ประมาณ 66 - 100 ต้น ต่อไร่</div>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">ความสูงทรงพุ่ม</div>
+                                    <div class="text-lg font-bold text-brand-700">2.5 - 3.0 เมตร</div>
+                                    <div class="text-xs text-slate-500 mt-1">ตัดแต่งแบบทรงฝาชีสวม (Open Center)</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <h5 class="font-bold text-slate-800 text-base">เทคนิคการควบคุมทรงพุ่ม</h5>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>ปีที่ 1–2 (ตัดยอดประธาน):</strong> ตัดยอดลำต้นที่ความสูง 80–100 ซม. เพื่อบังคับให้แตกกิ่งข้าง 3–4 กิ่ง วางโครงสร้างกิ่งแม่</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>ปีที่ 3 เป็นต้นไป (เปิดกลางพุ่ม):</strong> ตัดกิ่งกลางกระโดงออก ให้แสงแดดส่องตรงถึงโคนต้น เป็นรูปฝาชีคว่ำสวมลงมา</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 mt-1"></i>
+                                        <span><strong>หลังเก็บเกี่ยว:</strong> ตัดแต่งกิ่งทันที ควบคุมความสูงไว้ที่ 2.5-3 เมตร เสมอ</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Info / Images -->
+                        <div class="space-y-6">
+                            <div class="rounded-2xl overflow-hidden shadow-md h-52 relative">
+                                <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80" alt="Low Canopy Pruned Orchard" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                                    <span class="text-white text-xs font-light">สวนลำไยระยะชิดทรงเตี้ย ตัดแต่งสวยงาม</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 rounded-2xl p-5 border border-amber-200 space-y-3">
+                                <h5 class="font-bold text-amber-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-thumbs-up"></i> ข้อดี & ข้อจำกัด
+                                </h5>
+                                <div class="space-y-2 text-xs">
+                                    <div class="text-amber-900">
+                                        <strong>ข้อดี:</strong> ได้ผลผลิตต่อไร่สูงมาก ประหยัดแรงงานเก็บเกี่ยว ปรับใช้เครื่องจักรได้ง่าย
+                                    </div>
+                                    <div class="text-rose-700">
+                                        <strong>ข้อจำกัด:</strong> ต้องใช้ทักษะการตัดแต่งกิ่งสูง และต้องให้น้ำ/ปุ๋ยอย่างสม่ำเสมอสัดส่วนแน่น
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 3 Content -->
+                <div id="content-method3" class="tab-content hidden space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">ราคาดี - มูลค่าสูง</span>
+                                <h4 class="text-2xl font-bold text-slate-800 mt-2">การปลูกลำไยนอกฤดูด้วยสารโพแทสเซียมคลอเรต ($\text{KClO}_3$)</h4>
+                                <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+                                    การบังคับให้ออกดอกนอกฤดูธรรมชาติ เพื่อหลีกเลี่ยงช่วงผลผลิตล้นตลาด สร้างรายได้และมูลค่าเพิ่มต่อกิโลกรัมสูงสุด
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">การให้สารทางดิน</div>
+                                    <div class="text-lg font-bold text-slate-800">100 - 200 กรัม</div>
+                                    <div class="text-xs text-slate-500 mt-1">ต่อความกว้างทรงพุ่ม 1 เมตร</div>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold uppercase mb-1">การพ่นทางใบ</div>
+                                    <div class="text-lg font-bold text-slate-800">ความเข้มข้น 0.5 - 1.0%</div>
+                                    <div class="text-xs text-slate-500 mt-1">พ่น 2 ครั้ง ห่างกัน 7-10 วัน</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <h5 class="font-bold text-slate-800 text-base">ขั้นตอนปฏิบัติการราดสารบังคับ</h5>
+                                <ol class="space-y-2 text-sm text-slate-600 list-decimal list-inside">
+                                    <li><strong>เตรียมต้น:</strong> ต้องเป็นต้นที่สมบูรณ์ แตกใบอ่อนครบ 2-3 ชุด ใบชุดสุดท้ายเป็นใบแก่จัด (สีเขียวเข้ม)</li>
+                                    <li><strong>การงดน้ำ:</strong> งดการให้น้ำและงดปุ๋ยไนโตรเจนก่อนราดสารประมาณ 1 เดือน</li>
+                                    <li><strong>การราดสาร $\text{KClO}_3$:</strong> หว่านสารรอบชายพุ่ม รดน้ำตามทันทีเพื่อให้สารละลายสู่ระบบราก</li>
+                                    <li><strong>การดูแลหลังราดสาร:</strong> หลังราดสาร 20-25 วัน จะเริ่มเห็นการแทงช่อดอก ต้องให้น้ำสม่ำเสมอและใส่ปุ๋ยบำรุงช่อดอกทันที</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Info / Images -->
+                        <div class="space-y-6">
+                            <div class="rounded-2xl overflow-hidden shadow-md h-52 relative">
+                                <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=800&q=80" alt="Off Season Agriculture" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                                    <span class="text-white text-xs font-light">การจัดการลำไยนอกฤดูอย่างมีประสิทธิภาพ</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 rounded-2xl p-5 border border-purple-200 space-y-3">
+                                <h5 class="font-bold text-purple-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-thumbs-up"></i> ข้อดี & ข้อจำกัด
+                                </h5>
+                                <div class="space-y-2 text-xs">
+                                    <div class="text-purple-900">
+                                        <strong>ข้อดี:</strong> ได้ราคาดี ขายได้สูงกว่าช่วงในฤดู 1.5 - 2 เท่า กำหนดเวลาเก็บเกี่ยวได้
+                                    </div>
+                                    <div class="text-rose-700">
+                                        <strong>ข้อจำกัด:</strong> ต้นลำไยโทรมเร็ว มีค่าสารเคมีเพิ่มขึ้น หากดูแลน้ำไม่ดีอาจใบร่วงได้
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 3: Dynamic Comparison Tool / Table -->
+        <section id="comparison" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-table-list text-brand-700"></i> ตารางเปรียบเทียบเชิงโต้ตอบ (Interactive Comparison Table)
+                    </h3>
+                    <p class="text-slate-500 text-sm mt-1">เปรียบเทียบคุณสมบัติเด่นของทั้ง 3 วิธีแบบมิติซ้อนมิติ</p>
+                </div>
+                <!-- Filter Buttons -->
+                <div class="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200 self-start">
+                    <button onclick="filterTable('all')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-medium bg-brand-700 text-white transition">ทั้งหมด</button>
+                    <button onclick="filterTable('density')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition">เน้นจำนวนต้น</button>
+                    <button onclick="filterTable('profit')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition">เน้นรายได้</button>
+                </div>
+            </div>
+
+            <!-- Responsive Table Container -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-sm text-left text-slate-700">
+                        <thead class="text-xs uppercase bg-slate-100 text-slate-700 border-b border-slate-200">
+                            <tr>
+                                <th scope="col" class="py-4 px-6 font-bold">ปัจจัย / หัวข้อการเปรียบเทียบ</th>
+                                <th scope="col" class="py-4 px-6 font-bold text-emerald-800 bg-emerald-50/50">1. ทรงพุ่มธรรมชาติ</th>
+                                <th scope="col" class="py-4 px-6 font-bold text-amber-800 bg-amber-50/50">2. ระยะชิดทรงเตี้ย</th>
+                                <th scope="col" class="py-4 px-6 font-bold text-purple-800 bg-purple-50/50">3. ทำนอกฤดู (KClO3)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="density">
+                                <td class="py-4 px-6 font-semibold text-slate-900">จำนวนต้นต่อไร่</td>
+                                <td class="py-4 px-6">16 – 25 ต้น</td>
+                                <td class="py-4 px-6 font-bold text-amber-600 bg-amber-50/20">66 – 100 ต้น (สูงสุด)</td>
+                                <td class="py-4 px-6">ขึ้นกับระยะปลูก (ส่วนใหญ่ 25-66 ต้น)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="all">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ระยะปลูกที่แนะนำ</td>
+                                <td class="py-4 px-6">8x8 ถึง 10x10 เมตร</td>
+                                <td class="py-4 px-6">4x4 หรือ 3x6 เมตร</td>
+                                <td class="py-4 px-6">6x6 ถึง 8x8 เมตร</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="profit">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ต้นทุนเริ่มต้นต่อไร่</td>
+                                <td class="py-4 px-6 font-bold text-emerald-600">ต่ำ (ประหยัดสุด)</td>
+                                <td class="py-4 px-6">ปานกลาง - สูง (ค่ากล้าพันธุ์)</td>
+                                <td class="py-4 px-6">สูง (ค่าสารเคมีและระบบน้ำ)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="all">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ความยากในการดูแล/ตัดกิ่ง</td>
+                                <td class="py-4 px-6">ง่ายใน 5 ปีแรก (ยากเมื่อต้นสูง)</td>
+                                <td class="py-4 px-6">ปานกลาง (ต้องตัดแต่งสม่ำเสมอ)</td>
+                                <td class="py-4 px-6">ยาก (ต้องคุมระยะจังหวะใบแก่)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="all">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ความสะดวกในการเก็บเกี่ยว</td>
+                                <td class="py-4 px-6 text-rose-600">ยาก (ต้องปีน/พะโอน)</td>
+                                <td class="py-4 px-6 font-bold text-emerald-600 bg-amber-50/20">ง่ายมาก (ยืนเก็บจากพื้นได้)</td>
+                                <td class="py-4 px-6">ปานกลาง - ยาก</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="profit">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ราคาขายคาดการณ์ / กก.</td>
+                                <td class="py-4 px-6">25 - 35 บาท (ราคาฤดูปกติ)</td>
+                                <td class="py-4 px-6">25 - 35 บาท (เน้นปริมาณ)</td>
+                                <td class="py-4 px-6 font-bold text-purple-700 bg-purple-50/20">45 - 80 บาท (ราคาสูงสุด)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition row-item" data-category="profit">
+                                <td class="py-4 px-6 font-semibold text-slate-900">ระยะเวลาเริ่มให้ผลผลิต</td>
+                                <td class="py-4 px-6">4 - 5 ปี</td>
+                                <td class="py-4 px-6 font-bold text-amber-600">3 - 4 ปี (ติดผลเร็ว)</td>
+                                <td class="py-4 px-6">3.5 - 4.5 ปี</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Interactive ROI & Yield Calculator -->
+        <section id="calculator" class="bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 text-white rounded-3xl p-6 md:p-10 shadow-xl relative overflow-hidden">
+            <!-- Background Decorative Elements -->
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-3xl mb-8 relative z-10">
+                <span class="px-3 py-1 bg-amber-500 text-brand-dark text-xs font-bold rounded-full uppercase tracking-wider">
+                    Interactive ROI Calculator
+                </span>
+                <h3 class="text-2xl md:text-3xl font-bold mt-2">เครื่องมือคำนวณผลผลิตและรายได้ประมาณการ</h3>
+                <p class="text-slate-300 text-sm mt-1">ทดลองใส่ขนาดพื้นที่และเลือกวิธีการปลูก เพื่อประเมินผลผลิตและผลตอบแทนที่คุณจะได้รับ</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                <!-- Controls Form (5 cols) -->
+                <div class="lg:col-span-5 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/15 space-y-5">
+                    <!-- Input 1: Land Area -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-200 mb-2">ขนาดพื้นที่ปลูก (จำนวนไร่):</label>
+                        <div class="relative">
+                            <input type="number" id="calc-area" value="5" min="1" max="100" class="w-full bg-slate-900/80 border border-white/20 rounded-xl py-3 px-4 text-white font-bold focus:outline-none focus:border-amber-400 text-lg">
+                            <span class="absolute right-4 top-3.5 text-xs text-slate-400">ไร่</span>
+                        </div>
+                    </div>
+
+                    <!-- Input 2: Method Select -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-200 mb-2">เลือกวิธีการปลูก:</label>
+                        <select id="calc-method" class="w-full bg-slate-900/80 border border-white/20 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-amber-400">
+                            <option value="1">1. ทรงพุ่มธรรมชาติ (20 ต้น/ไร่)</option>
+                            <option value="2" selected>2. ระยะชิดทรงเตี้ย (80 ต้น/ไร่)</option>
+                            <option value="3">3. การปลูกนอกฤดู (35 ต้น/ไร่)</option>
+                        </select>
+                    </div>
+
+                    <!-- Input 3: Tree Age -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-200 mb-2">ช่วงอายุของสวน (ปี):</label>
+                        <select id="calc-age" class="w-full bg-slate-900/80 border border-white/20 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-amber-400">
+                            <option value="young">ระยะแรกเริ่ม (3 - 5 ปี)</option>
+                            <option value="mature" selected>ระยะให้ผลผลิตเต็มที่ (6 - 10 ปี)</option>
+                            <option value="old">ระยะต้นโตเต็มวัย (10 ปีขึ้นไป)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="calculateROI()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-brand-dark font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator"></i> คำนวณผลลัพธ์
+                    </button>
+                </div>
+
+                <!-- Display Results (7 cols) -->
+                <div class="lg:col-span-7 bg-white text-slate-800 p-6 md:p-8 rounded-2xl shadow-xl space-y-6">
+                    <h4 class="text-base font-bold text-slate-700 border-b pb-3 flex items-center justify-between">
+                        <span>ประมาณการผลลัพธ์ที่จะได้รับ</span>
+                        <span id="result-method-tag" class="text-xs px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-semibold">ระยะชิดทรงเตี้ย</span>
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="text-xs text-slate-400 font-medium block mb-1">จำนวนต้นรวม</span>
+                            <span id="res-trees" class="text-2xl font-extrabold text-slate-800">400</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">ต้น</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="text-xs text-slate-400 font-medium block mb-1">ผลผลิตรวมคาดการณ์</span>
+                            <span id="res-yield" class="text-2xl font-extrabold text-brand-700">32,000</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">กิโลกรัม</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                            <span class="text-xs text-slate-400 font-medium block mb-1">รายได้ประมาณการ</span>
+                            <span id="res-revenue" class="text-2xl font-extrabold text-amber-600">960,000</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">บาท / ปี</span>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Note -->
+                    <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-100 text-xs text-emerald-900 space-y-1">
+                        <div class="font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info"></i> รายละเอียดข้อสมมติฐาน:
+                        </div>
+                        <p id="res-note">คิดจากเฉลี่ย 80 ต้น/ไร่ ผลผลิตประมาณ 80 กก./ต้น ราคาขายเฉลี่ยในฤดู 30 บาท/กก.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-slate-300 border-t border-emerald-900 mt-12 py-8 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-tree text-amber-400 text-base"></i>
+                <span class="font-medium text-white">ระบบจัดการและคู่มือการปลูกลำไยเชิงพาณิชย์</span>
+            </div>
+            <p class="text-slate-400">ข้อมูลอ้างอิงจากหลักการเกษตรดีที่เหมาะสม (GAP) สำหรับการผลิตลำไยคุณภาพสูง</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Tab Switcher Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Remove active class from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Show target content
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            // Add active class to button
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // Table Filter Logic
+        function filterTable(category) {
+            const rows = document.querySelectorAll('.row-item');
+            const btns = document.querySelectorAll('.filter-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('bg-brand-700', 'text-white');
+                btn.classList.add('text-slate-600');
+            });
+            event.target.classList.add('bg-brand-700', 'text-white');
+
+            rows.forEach(row => {
+                if (category === 'all' || row.getAttribute('data-category') === category || row.getAttribute('data-category') === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // ROI Calculator Logic
+        function calculateROI() {
+            const area = parseFloat(document.getElementById('calc-area').value) || 1;
+            const method = document.getElementById('calc-method').value;
+            const age = document.getElementById('calc-age').value;
+
+            let treesPerRai = 20;
+            let yieldPerTree = 80; // kg
+            let pricePerKg = 30; // THB
+            let methodName = "";
+
+            // Method Factors
+            if (method === "1") {
+                treesPerRai = 20;
+                methodName = "ทรงพุ่มธรรมชาติ";
+                pricePerKg = 30;
+                yieldPerTree = age === "young" ? 40 : (age === "mature" ? 100 : 150);
+            } else if (method === "2") {
+                treesPerRai = 80;
+                methodName = "ระยะชิดทรงเตี้ย";
+                pricePerKg = 30;
+                yieldPerTree = age === "young" ? 35 : (age === "mature" ? 70 : 85);
+            } else if (method === "3") {
+                treesPerRai = 35;
+                methodName = "การปลูกนอกฤดู";
+                pricePerKg = 55; // Higher price for off-season
+                yieldPerTree = age === "young" ? 45 : (age === "mature" ? 90 : 120);
+            }
+
+            const totalTrees = area * treesPerRai;
+            const totalYield = totalTrees * yieldPerTree;
+            const totalRevenue = totalYield * pricePerKg;
+
+            // Update UI
+            document.getElementById('result-method-tag').innerText = methodName;
+            document.getElementById('res-trees').innerText = totalTrees.toLocaleString();
+            document.getElementById('res-yield').innerText = totalYield.toLocaleString();
+            document.getElementById('res-revenue').innerText = totalRevenue.toLocaleString();
+            
+            document.getElementById('res-note').innerText = 
+                `คำนวณจากพื้นที่ ${area} ไร่ (${treesPerRai} ต้น/ไร่) รวม ${totalTrees} ต้น ` +
+                `ผลผลิตประมาณ ${yieldPerTree} กก./ต้น ราคาประเมินเฉลี่ย ${pricePerKg} บาท/กก.`;
+        }
+
+        // Initialize Chart.js Charts on Window Load
+        window.onload = function() {
+            // 1. Yield Comparison Chart
+            const ctxYield = document.getElementById('yieldChart').getContext('2d');
+            new Chart(ctxYield, {
+                type: 'bar',
+                data: {
+                    labels: ['ปีที่ 3', 'ปีที่ 5', 'ปีที่ 7', 'ปีที่ 10'],
+                    datasets: [
+                        {
+                            label: '1. ทรงพุ่มธรรมชาติ',
+                            data: [0, 800, 2000, 3000],
+                            backgroundColor: '#22c55e'
+                        },
+                        {
+                            label: '2. ระยะชิดทรงเตี้ย',
+                            data: [1600, 4800, 5600, 6000],
+                            backgroundColor: '#f59e0b'
+                        },
+                        {
+                            label: '3. ปลูกนอกฤดู',
+                            data: [1000, 3150, 3850, 4200],
+                            backgroundColor: '#a855f7'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'ผลผลิต (กก./ไร่)' }
+                        }
+                    }
+                }
+            });
+
+            // 2. Cost Structure Radar/Doughnut Chart
+            const ctxCost = document.getElementById('costChart').getContext('2d');
+            new Chart(ctxCost, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ค่ากล้าพันธุ์ & ปลูก', 'ค่าปุ๋ย & สารเคมี/KClO3', 'ค่าแรงตัดแต่งกิ่ง', 'ค่าแรงเก็บเกี่ยว'],
+                    datasets: [{
+                        data: [20, 35, 15, 30],
+                        backgroundColor: ['#10b981', '#a855f7', '#f59e0b', '#3b82f6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Run initial calculation
+            calculateROI();
+        };
+    </script>
+</body>
+</html>
